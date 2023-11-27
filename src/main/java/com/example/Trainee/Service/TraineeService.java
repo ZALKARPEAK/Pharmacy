@@ -11,6 +11,8 @@ import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTraineeTrainerList.UpdateTraineeTrainerListRequest;
 import com.example.Trainee.Dto.TrainerInfo;
+import com.example.Trainee.Dto.Training.getTraineeTrainingsList.GetTraineeTrainingsListRequest;
+import com.example.Trainee.Dto.Training.getTraineeTrainingsList.TrainingResponse;
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Dto.UserCheckRequest;
@@ -26,17 +28,17 @@ public interface TraineeService {
 
     UpdateTraineeResponse updateTraineeProfile(String username, UpdateTraineeRequest updateTraineeRequest);
 
-    TraineeResponse activateTrainee(Long id);
-
-    TraineeResponse deactivateTrainee(Long id);
-
     SimpleResponse deleteTraineeProfileByUsername(GetTraineeProfileRequest username);
 
-    TrainerResponse updateTraineeTrainerList(Long id, UpdateTraineeTrainerListRequest request);
+    TrainerResponse updateTraineeTrainerList(UpdateTraineeTrainerListRequest request);
 
-    TraineeResponse getTraineeTrainingList(String traineeUsername);
+    List<TrainingResponse> getTraineeTrainingsList(GetTraineeTrainingsListRequest request);
 
     List<TrainerInfo> getNotAssignedActiveTrainersListForTrainee(GetTraineeProfileRequest request);
 
     GetTraineeProfileResponse SelectTraineeProfileByUsername(GetTraineeProfileRequest getTraineeProfileRequest);
+
+    TraineeResponse activateTrainee(Long id);
+
+    TraineeResponse deactivateTrainee(Long id);
 }

@@ -68,9 +68,9 @@ public class TraineeApi {
         return new ResponseEntity<>(trainerResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/updateTrainerList/{traineeId}")
-    public ResponseEntity<TrainerResponse> updateTrainer(@PathVariable Long traineeId, @RequestBody UpdateTraineeTrainerListRequest updateRequest) {
-       TrainerResponse trainerResponse = traineeService.updateTraineeTrainerList(traineeId, updateRequest);
+    @PutMapping("/updateTrainerList")
+    public ResponseEntity<TrainerResponse> updateTrainer(@RequestBody UpdateTraineeTrainerListRequest updateRequest) {
+       TrainerResponse trainerResponse = traineeService.updateTraineeTrainerList(updateRequest);
         return new ResponseEntity<>(trainerResponse, HttpStatus.OK);
     }
 }

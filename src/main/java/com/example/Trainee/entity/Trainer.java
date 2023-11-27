@@ -22,7 +22,7 @@ public class Trainer extends Id {
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @ManyToMany(mappedBy = "trainer",cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @ManyToMany(mappedBy = "trainer",fetch = FetchType.EAGER)
     @JsonIgnore
     private List<Trainee> trainee;
 

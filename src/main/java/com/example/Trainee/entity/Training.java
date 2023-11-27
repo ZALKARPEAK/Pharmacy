@@ -1,6 +1,5 @@
 package com.example.Trainee.entity;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
@@ -18,11 +17,13 @@ import java.util.Date;
 @AllArgsConstructor
 @Builder
 public class Training extends Id {
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     private Trainee trainee;
-    @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+
+    @ManyToOne
     private Trainer trainer;
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     private Training_Types trainingTypes;
 
     private String TrainingName;
