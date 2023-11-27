@@ -1,11 +1,14 @@
 package com.example.Trainee.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import com.example.Trainee.entity.additional.Id;
+
+import java.util.List;
 
 @Entity
 @Setter
@@ -19,8 +22,9 @@ public class Trainer extends Id {
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne
-    private Trainee trainee;
+    @ManyToMany(mappedBy = "trainer",cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+    @JsonIgnore
+    private List<Trainee> trainee;
 
     public Trainer() {
     }

@@ -3,6 +3,8 @@ package com.example.Trainee.Api;
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
+import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerRequest;
+import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerResponse;
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCheckRequest;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
@@ -20,7 +22,7 @@ public class TrainerApi {
 
     private final TrainerService trainerService;
 
-    @PostMapping("/createProfileTrainer")
+    @PostMapping("/create-profile")
     public ResponseEntity<UserCreateResponse> createTrainerProfile(@RequestBody TrainerRequest trainerRequest) {
         UserCreateResponse response = trainerService.createTrainerProfile(trainerRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
@@ -42,5 +44,11 @@ public class TrainerApi {
     public ResponseEntity<GetTrainerProfileResponse> selectTraineeProfileByUsername(@RequestBody GetTrainerProfileRequest getTraineeProfileRequest) {
         GetTrainerProfileResponse getTraineeProfileResponse = trainerService.SelectTrainerProfileByUsername(getTraineeProfileRequest);
         return new ResponseEntity<>(getTraineeProfileResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/UpdateTrainer/{username}")
+    public ResponseEntity<UpdateTrainerResponse> updateTrainer(@PathVariable String username, @RequestBody UpdateTrainerRequest updateTrainerRequest){
+        UpdateTrainerResponse updateTrainerProfile = trainerService.updateTrainerProfile(username, updateTrainerRequest);
+        return new ResponseEntity<>(updateTrainerProfile, HttpStatus.OK);
     }
 }

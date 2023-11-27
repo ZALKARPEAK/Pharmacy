@@ -1,16 +1,16 @@
 package com.example.Trainee.Service.impl;
 
 import com.example.Trainee.Dto.SimpleResponse;
-import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileResponse;
-import com.example.Trainee.Dto.Trainee.GetTraineeProfile.TrainerResponse;
+import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
+import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerRequest;
+import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerResponse;
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCheckRequest;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Repo.TrainerRepo;
-import com.example.Trainee.Repo.Training_TypesRepo;
 import com.example.Trainee.Repo.UserRepo;
 import com.example.Trainee.Service.TrainerService;
 import com.example.Trainee.Service.UserService;
@@ -34,7 +34,6 @@ public class TrainerServiceImpl implements TrainerService {
     private final TrainerRepo trainerDao;
     private final UserService userService;
     private final UserRepo userRepo;
-    private final Training_TypesRepo trainingTypesRepo;
 
     @Override
     public UserCreateResponse createTrainerProfile(TrainerRequest trainerRequest) {
@@ -53,6 +52,8 @@ public class TrainerServiceImpl implements TrainerService {
                 .user(user)
                 .build();
 
+        user.setTrainer(trainer);
+        trainer.setUser(user);
         trainerDao.save(trainer);
 
         return new UserCreateResponse(
@@ -92,12 +93,12 @@ public class TrainerServiceImpl implements TrainerService {
             return null;
         }
 
-        User user = trainer.getUser();
         GetTrainerProfileResponse response = new GetTrainerProfileResponse();
-        response.setFirstName(user.getFirstName());
-        response.setLastName(user.getLastName());
-        response.setActive(user.isActive());
-        response.setTrainingTypes(user.getTrainer().getTrainingTypes());
+        response.setFirstName(trainer.getUser().getFirstName());
+        response.setLastName(trainer.getUser().getLastName());
+        response.setActive(trainer.getUser().isActive());
+        response.setTrainingTypes(trainer.getUser().getTrainer().getTrainingTypes());
+        response.setTraineeResponses(trainer.getTrainee());
         return response;
     }
 
@@ -120,9 +121,31 @@ public class TrainerServiceImpl implements TrainerService {
     }
 
     @Override
-    public TrainerResponse updateTrainerProfile(TrainerResponse trainerResponse) {
-        return null;
+    public UpdateTrainerResponse updateTrainerProfile(String username, UpdateTrainerRequest updateTrainerRequest) {
+        Trainer trainer = trainerDao.findTrainerByUser_Username(username);
+
+        if(trainer == null){
+            return null;
+        }
+
+        User user = trainer.getUser();
+        user.setUsername(updateTrainerRequest.getUsername());
+        user.setFirstName(updateTrainerRequest.getFirstName());
+        user.setLastName(updateTrainerRequest.getLastName());
+        user.setActive(updateTrainerRequest.isActive());
+        userRepo.save(user);
+
+        UpdateTrainerResponse updateTraineeResponse = new UpdateTrainerResponse();
+        updateTraineeResponse.setUsername(updateTrainerRequest.getUsername());
+        updateTraineeResponse.setFirstName(updateTrainerRequest.getFirstName());
+        updateTraineeResponse.setLastName(updateTrainerRequest.getLastName());
+        updateTraineeResponse.setTrainingTypes(updateTrainerRequest.getTrainingTypes());
+        updateTraineeResponse.setActive(updateTrainerRequest.isActive());
+        updateTraineeResponse.setTraineeResponse(trainer.getTrainee());
+
+        return updateTraineeResponse;
     }
+
 
     @Override
     public ResponseEntity<String> activateTrainer(Long id) {

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Setter
@@ -21,8 +22,8 @@ public class Trainee extends Id {
     @OneToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private User user;
 
-    @OneToOne
-    private Trainer trainer;
+    @ManyToMany( cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    private List<Trainer> trainer;
 
     public Trainee() {
     }

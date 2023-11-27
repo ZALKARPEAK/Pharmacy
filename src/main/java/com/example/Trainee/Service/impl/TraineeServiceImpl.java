@@ -4,26 +4,34 @@ package com.example.Trainee.Service.impl;
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileRequest;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileResponse;
+import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeRequest;
 import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeResponse;
+import com.example.Trainee.Dto.Trainee.UpdateTraineeTrainerList.UpdateTraineeTrainerListRequest;
+import com.example.Trainee.Dto.TrainerInfo;
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Dto.UserCheckRequest;
 import com.example.Trainee.Repo.TraineeRepo;
+import com.example.Trainee.Repo.TrainerRepo;
 import com.example.Trainee.Repo.UserRepo;
 import com.example.Trainee.Service.TraineeService;
 import com.example.Trainee.Service.UserService;
 import com.example.Trainee.entity.Trainee;
+import com.example.Trainee.entity.Trainer;
 import com.example.Trainee.entity.User;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +39,7 @@ import java.util.List;
 public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeRepo traineeRepo;
+    private final TrainerRepo trainerRepo;
     private final UserService userService;
     private final UserRepo userRepo;
 
@@ -49,6 +58,8 @@ public class TraineeServiceImpl implements TraineeService {
                 .user(user)
                 .build();
 
+        user.setTrainee(trainee);
+        trainee.setUser(user);
         traineeRepo.save(trainee);
         return new UserCreateResponse(
                 user.getUsername(),
@@ -109,8 +120,7 @@ public class TraineeServiceImpl implements TraineeService {
         response.setLastName(trainee.getUser().getLastName());
         response.setDateOfBirth(trainee.getDate_of_birth());
         response.setAddress(trainee.getAddress());
-
-
+        response.setTrainerResponses(trainee.getTrainer());
         return response;
     }
 
@@ -140,18 +150,9 @@ public class TraineeServiceImpl implements TraineeService {
         updateTraineeResponse.setDateOfBirth(updateTraineeRequest.getDateOfBirth());
         updateTraineeResponse.setAddress(updateTraineeRequest.getAddress());
         updateTraineeResponse.setActive(updateTraineeRequest.isActive());
+        updateTraineeResponse.setTraineeResponse(trainee.getTrainer());
 
         return updateTraineeResponse;
-    }
-
-    @Override
-    public TraineeResponse activateTrainee(Long id) {
-        return null;
-    }
-
-    @Override
-    public TraineeResponse deactivateTrainee(Long id) {
-        return null;
     }
 
     @Override
@@ -165,8 +166,74 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public TraineeResponse updateTraineeTrainingList(String traineeUsername, List<Long> trainerIds) {
-        return null;
+    public List<TrainerInfo> getNotAssignedActiveTrainersListForTrainee(GetTraineeProfileRequest request) {
+        /*Trainee trainee = traineeRepo.findTraineeByUser_Username(request.getUsername());
+
+        if (trainee == null) {
+            return new ArrayList<>();
+        }
+
+        List<Trainer> trainers = trainee.getTrainer();
+        List<Trainer> active = trainerRepo.findActiveTrainer();
+
+        List<Trainer> notAssigned = trainers.stream().filter(
+                trainer -> !active.contains(trainer)
+        ).toList();
+
+        return notAssigned.stream().map(
+                trainer -> {
+                    TrainerInfo response = new TrainerInfo();
+                    response.setUserName(trainer.getUser().getUsername());
+                    response.setFirstName(trainer.getUser().getFirstName());
+                    response.setLastName(trainer.getUser().getLastName());
+                    response.setTrainingTypes(trainer.getTrainingTypes());
+                    return response;
+                }
+        ).collect(Collectors.toList());*/
+
+        String traineeUsername = request.getUsername();
+        Trainee trainee = traineeRepo.findTraineeByUser_Username(traineeUsername);
+        List<Trainer> trainers = trainerRepo.findActiveTrainer();
+
+
+        List<Trainer> assignedTrainers = trainee.getTrainer();
+
+        List<Trainer> notAssigned = trainers.stream()
+                .filter(trainer -> !assignedTrainers.contains(trainer))
+                .toList();
+
+        return notAssigned.stream().map(
+                trainer -> new TrainerInfo(
+                        trainer.getUser().getUsername(),
+                        trainer.getUser().getFirstName(),
+                        trainer.getUser().getLastName(),
+                        trainer.getTrainingTypes()
+                )
+        ).collect(Collectors.toList());
+    }
+
+
+    @Override
+    public TrainerResponse updateTraineeTrainerList(Long id, UpdateTraineeTrainerListRequest updateRequest) {
+        Trainee trainee = traineeRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Trainee not found with ID: " + id));
+
+        List<String> trainersUsername = updateRequest.getUsernames();
+        List<Trainer> trainers = trainerRepo.findTraineeByUser_Username2(trainersUsername);
+        trainee.setTrainer(trainers);
+        traineeRepo.save(trainee);
+        List<TrainerResponse> updateResponses = trainers.stream()
+                .map(trainer -> new TrainerResponse(
+                        trainer.getUser().getFirstName(),
+                        trainer.getUser().getLastName(),
+                        trainer.getUser().getUsername(),
+                        trainer.getTrainingTypes()
+                ))
+                .collect(Collectors.toList());
+
+
+
+        return new TrainerResponse(updateResponses);
     }
 
     @Override
@@ -175,8 +242,12 @@ public class TraineeServiceImpl implements TraineeService {
     }
 
     @Override
-    public List<TraineeResponse> getNotAssignedActiveTrainersListForTrainee(String trainerUsername) {
+    public TraineeResponse activateTrainee(Long id) {
         return null;
     }
 
+    @Override
+    public TraineeResponse deactivateTrainee(Long id) {
+        return null;
+    }
 }

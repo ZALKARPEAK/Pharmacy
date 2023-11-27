@@ -3,9 +3,12 @@ package com.example.Trainee.Api;
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileRequest;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileResponse;
+import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeResponse;
+import com.example.Trainee.Dto.Trainee.UpdateTraineeTrainerList.UpdateTraineeTrainerListRequest;
+import com.example.Trainee.Dto.TrainerInfo;
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Dto.UserCheckRequest;
@@ -14,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/Trainee")
@@ -55,5 +60,17 @@ public class TraineeApi {
     public ResponseEntity<SimpleResponse>response(@RequestBody GetTraineeProfileRequest delete){
         SimpleResponse getTraineeProfileRequest=traineeService.deleteTraineeProfileByUsername(delete);
         return new ResponseEntity<>(getTraineeProfileRequest, HttpStatus.OK);
+    }
+
+    @GetMapping("/getNotAssigned")
+    public ResponseEntity<List<TrainerInfo>> getNotAssigned(@RequestBody GetTraineeProfileRequest request){
+        List<TrainerInfo> trainerResponse = traineeService.getNotAssignedActiveTrainersListForTrainee(request);
+        return new ResponseEntity<>(trainerResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/updateTrainerList/{traineeId}")
+    public ResponseEntity<TrainerResponse> updateTrainer(@PathVariable Long traineeId, @RequestBody UpdateTraineeTrainerListRequest updateRequest) {
+       TrainerResponse trainerResponse = traineeService.updateTraineeTrainerList(traineeId, updateRequest);
+        return new ResponseEntity<>(trainerResponse, HttpStatus.OK);
     }
 }

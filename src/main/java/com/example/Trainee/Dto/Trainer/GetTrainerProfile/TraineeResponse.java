@@ -12,9 +12,4 @@ public class TraineeResponse {
     private String firstName;
     private String lastName;
 
-    public TraineeResponse(String username, String firstName, String lastName) {
-        this.username = username;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 }

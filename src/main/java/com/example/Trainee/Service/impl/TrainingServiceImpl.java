@@ -1,7 +1,7 @@
 package com.example.Trainee.Service.impl;
 
 import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeResponse;
-import com.example.Trainee.Dto.Trainee.GetTraineeProfile.TrainerResponse;
+import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Training.TrainingResponse;
 import com.example.Trainee.Repo.TrainingRepo;
 import com.example.Trainee.Service.TrainingService;
