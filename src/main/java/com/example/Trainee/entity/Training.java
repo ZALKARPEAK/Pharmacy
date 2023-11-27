@@ -1,8 +1,10 @@
 package com.example.Trainee.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,12 +20,14 @@ import java.util.Date;
 @Builder
 public class Training extends Id {
     @ManyToOne
+    @JsonIgnore
     private Trainee trainee;
 
     @ManyToOne
+    @JsonIgnore
     private Trainer trainer;
 
-    @ManyToOne
+    @OneToOne
     private Training_Types trainingTypes;
 
     private String TrainingName;

@@ -16,10 +16,10 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class Trainer extends Id {
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH, CascadeType.REFRESH})
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private Training_Types trainingTypes;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private User user;
 
     @ManyToMany(mappedBy = "trainer",fetch = FetchType.EAGER)
