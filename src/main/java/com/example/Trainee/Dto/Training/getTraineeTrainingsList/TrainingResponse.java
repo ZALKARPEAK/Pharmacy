@@ -17,4 +17,6 @@ public class TrainingResponse {
    private Number duration;
    private String TrainerName;
 
+   public TrainingResponse(String trainingName, LocalDate trainingDate, int durationInDays, String firstName) {
+   }
 }

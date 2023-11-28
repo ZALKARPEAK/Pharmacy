@@ -2,6 +2,8 @@ package com.example.Trainee.Service.impl;
 
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
+import com.example.Trainee.Dto.Trainer.getTrainings.PeriodTrainingsList;
+import com.example.Trainee.Dto.Trainer.getTrainings.ResponseTrainers;
 import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
@@ -11,18 +13,22 @@ import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCheckRequest;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
+import com.example.Trainee.Repo.TraineeRepo;
 import com.example.Trainee.Repo.TrainerRepo;
 import com.example.Trainee.Repo.UserRepo;
 import com.example.Trainee.Service.TrainerService;
 import com.example.Trainee.Service.UserService;
 
-import com.example.Trainee.entity.Trainer;
-import com.example.Trainee.entity.Training_Types;
-import com.example.Trainee.entity.User;
+import com.example.Trainee.entity.*;
 import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,6 +38,7 @@ public class TrainerServiceImpl implements TrainerService {
     private final TrainerRepo trainerDao;
     private final UserService userService;
     private final UserRepo userRepo;
+    private final TraineeRepo traineeRepo;
 
     @Override
     public UserCreateResponse createTrainerProfile(TrainerRequest trainerRequest) {
@@ -144,7 +151,6 @@ public class TrainerServiceImpl implements TrainerService {
         return updateTraineeResponse;
     }
 
-
     @Override
     public SimpleResponse activateTrainer(ActiveDeActiveRequest request) {
         Trainer trainer = trainerDao.findTrainerByUser_Username(request.getUsername());
@@ -169,9 +175,25 @@ public class TrainerServiceImpl implements TrainerService {
         return SimpleResponse.builder().massage("Trainer not found or already inactive").status(HttpStatus.NOT_FOUND).build();
     }
 
-
     @Override
-    public TrainerResponse getTrainerTrainingList(String trainerUsername) {
-        return null;
+    public List<ResponseTrainers> getTrainings(PeriodTrainingsList periodTrainingsList) {
+        Trainee trainee = traineeRepo.findTraineeByUser_Username(periodTrainingsList.getUserName());
+
+        List<String> trainings1 = Collections.singletonList(periodTrainingsList.getUserName());
+        List<Training> trainings = traineeRepo.findByTraining_UserNameIn(trainings1);
+
+        LocalDate periodFrom = periodTrainingsList.getPeriodFrom();
+        LocalDate periodTo = periodTrainingsList.getPeriodTo();
+
+        long durationInDays = periodTo.toEpochDay() - periodFrom.toEpochDay();
+
+        return trainings.stream()
+                .map(training -> new ResponseTrainers(
+                        training.getTrainingName(),
+                        training.getTrainingDate(),
+                        (int) durationInDays,
+                        training.getTrainer().getUser().getFirstName()
+                ))
+                .collect(Collectors.toList());
     }
 }

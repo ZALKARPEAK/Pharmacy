@@ -6,6 +6,8 @@ import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileReques
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerRequest;
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerResponse;
+import com.example.Trainee.Dto.Trainer.getTrainings.PeriodTrainingsList;
+import com.example.Trainee.Dto.Trainer.getTrainings.ResponseTrainers;
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCheckRequest;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/Trainer")
@@ -51,6 +55,12 @@ public class TrainerApi {
     public ResponseEntity<UpdateTrainerResponse> updateTrainer(@PathVariable String username, @RequestBody UpdateTrainerRequest updateTrainerRequest){
         UpdateTrainerResponse updateTrainerProfile = trainerService.updateTrainerProfile(username, updateTrainerRequest);
         return new ResponseEntity<>(updateTrainerProfile, HttpStatus.OK);
+    }
+
+    @GetMapping("/getTrainerTrainingsList")
+    private ResponseEntity<List<ResponseTrainers>> getTraineeTrainingsList(@RequestBody PeriodTrainingsList request){
+        List<ResponseTrainers> trainingResponse = trainerService.getTrainings(request);
+        return new ResponseEntity<>(trainingResponse, HttpStatus.OK);
     }
 
     @PatchMapping("/activateTrainer")

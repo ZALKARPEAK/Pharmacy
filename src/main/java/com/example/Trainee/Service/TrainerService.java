@@ -2,6 +2,8 @@ package com.example.Trainee.Service;
 
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
+import com.example.Trainee.Dto.Trainer.getTrainings.PeriodTrainingsList;
+import com.example.Trainee.Dto.Trainer.getTrainings.ResponseTrainers;
 import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
@@ -23,5 +25,5 @@ public interface TrainerService {
     UpdateTrainerResponse updateTrainerProfile(String username, UpdateTrainerRequest updateTrainerRequest);
     SimpleResponse activateTrainer(ActiveDeActiveRequest request);
     SimpleResponse deactivateTrainer(ActiveDeActiveRequest request);
-    TrainerResponse getTrainerTrainingList(String trainerUsername);
+    List<ResponseTrainers> getTrainings(PeriodTrainingsList periodTrainingsList);
 }
