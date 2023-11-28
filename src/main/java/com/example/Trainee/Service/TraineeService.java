@@ -3,10 +3,10 @@ package com.example.Trainee.Service;
 
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileRequest;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileResponse;
+import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
 import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeRequest;
 import com.example.Trainee.Dto.SimpleResponse;
-import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTraineeTrainerList.UpdateTraineeTrainerListRequest;
@@ -38,7 +38,7 @@ public interface TraineeService {
 
     GetTraineeProfileResponse SelectTraineeProfileByUsername(GetTraineeProfileRequest getTraineeProfileRequest);
 
-    TraineeResponse activateTrainee(Long id);
+    SimpleResponse activateTrainee(ActiveDeActiveRequest request);
 
-    TraineeResponse deactivateTrainee(Long id);
+    SimpleResponse deactivateTrainee(ActiveDeActiveRequest request);
 }

@@ -5,18 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class TrainingResponse {
    private String trainingName;
-   private Date trainingDate;
+   private LocalDate trainingDate;
    private Training_Types trainingTypes;
    private Number duration;
    private String TrainerName;
 
-   public TrainingResponse(String trainingName, Date trainingDate, String trainingTypeName, int duration, String username) {
-   }
 }

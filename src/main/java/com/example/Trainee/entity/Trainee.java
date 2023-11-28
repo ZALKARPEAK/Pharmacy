@@ -25,6 +25,9 @@ public class Trainee extends Id {
     @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     private List<Trainer> trainer;
 
+    @Transient
+    private List<Training> trainings;
+
     public Trainee() {
     }
 

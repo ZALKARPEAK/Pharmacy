@@ -33,6 +33,7 @@ public class TrainingServiceImpl implements TrainingService {
         training.setTrainingDate(addTrainingRequest.getTrainingDate());
         training.setDuration(addTrainingRequest.getDuration());
 
+
         trainingRepo.save(training);
 
         return null;

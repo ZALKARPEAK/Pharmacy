@@ -4,9 +4,9 @@ package com.example.Trainee.Service.impl;
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileRequest;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileResponse;
+import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
 import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeRequest;
-import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTraineeTrainerList.UpdateTraineeTrainerListRequest;
@@ -21,18 +21,17 @@ import com.example.Trainee.Repo.TrainerRepo;
 import com.example.Trainee.Repo.UserRepo;
 import com.example.Trainee.Service.TraineeService;
 import com.example.Trainee.Service.UserService;
-import com.example.Trainee.entity.Trainee;
-import com.example.Trainee.entity.Trainer;
-import com.example.Trainee.entity.Training;
-import com.example.Trainee.entity.User;
+import com.example.Trainee.entity.*;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 
@@ -223,43 +222,51 @@ public class TraineeServiceImpl implements TraineeService {
 
     @Override
     public List<TrainingResponse> getTraineeTrainingsList(GetTraineeTrainingsListRequest request) {
-        /*if (request.getUsername() == null || request.getUsername().isEmpty()) {
-            return Collections.emptyList();
-        }
-
         Trainee trainee = traineeRepo.findTraineeByUser_Username(request.getUsername());
 
-        if (trainee == null) {
+        if (trainee == null || trainee.getTrainer() == null || trainee.getTrainer().isEmpty()) {
             return Collections.emptyList();
         }
 
-        List<Trainer> trainers = trainee.getTrainer();
+        List<TrainingResponse> trainingResponses = new ArrayList<>();
 
-        List<Training> trainings = trainers.stream()
-                .flatMap(trainer -> trainer.getTrainingTypes().getTrainingTypeName().describeConstable().stream())
-                .filter(training -> isTrainingInRange(training, request.getPeriodFrom(), request.getPeriodTo()))
-                .filter(training -> isTrainingMatch(training, request.getTrainerName(), request.getTrainingType()))
-                .collect(Collectors.toList());
+        for (Trainer trainer : trainee.getTrainer()) {
 
-        return trainings.stream()
-                .map(training -> new TrainingResponse(
-                        training.getTrainingName(),
-                        training.getTrainingDate(),
-                        training.getTrainingTypes().getTrainingTypeName(),
-                        training.getDuration(),
-                        training.getTrainer().getUser().getUsername()
-                ))
-                .collect(Collectors.toList());*/
+            for (Training training : trainer.getTrainings()) {
+                if (training.getTrainingDate().isAfter(request.getPeriodFrom()) &&
+                        training.getTrainingDate().isBefore(request.getPeriodTo()) &&
+                        (request.getTrainerName() == null || request.getTrainerName().equals(trainer.getUser().getFirstName())) && Objects.equals(request.getTrainingTypes(), training.getTrainingTypes())) {
+                    TrainingResponse response = new TrainingResponse();
+                    response.setTrainingTypes(request.getTrainingTypes());
+                    response.setTrainingDate(training.getTrainingDate());
+                    trainingResponses.add(response);
+                }
+            }
+        }
+
+        return trainingResponses;
+    }
+
+    @Override
+    public SimpleResponse activateTrainee(ActiveDeActiveRequest request) {
+        Trainee trainee = traineeRepo.findTraineeByUser_Username(request.getUsername());
+        if(trainee != null && !trainee.getUser().isActive()){
+            trainee.getUser().setActive(true);
+            return SimpleResponse.builder().massage("Active").status(HttpStatus.OK).build();
+        }
+
         return null;
     }
 
     @Override
-    public TraineeResponse activateTrainee(Long id) {
-        return null;
-    }
+    public SimpleResponse deactivateTrainee(ActiveDeActiveRequest request) {
+        Trainee trainee = traineeRepo.findTraineeByUser_Username(request.getUsername());
+        if(trainee != null && trainee.getUser().isActive()){
+            trainee.getUser().setActive(false);
+            return SimpleResponse.builder().massage("Active").status(HttpStatus.OK).build();
+        }
 
-    @Override
-    public TraineeResponse deactivateTrainee(Long id) {
+
         return null;
     }
 }

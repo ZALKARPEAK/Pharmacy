@@ -3,7 +3,6 @@ package com.example.Trainee.Api;
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Training.CreateTraining.AddTrainingRequest;
 import com.example.Trainee.Service.TrainingService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

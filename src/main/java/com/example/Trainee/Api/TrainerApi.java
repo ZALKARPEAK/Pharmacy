@@ -1,6 +1,7 @@
 package com.example.Trainee.Api;
 
 import com.example.Trainee.Dto.SimpleResponse;
+import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerRequest;
@@ -50,5 +51,17 @@ public class TrainerApi {
     public ResponseEntity<UpdateTrainerResponse> updateTrainer(@PathVariable String username, @RequestBody UpdateTrainerRequest updateTrainerRequest){
         UpdateTrainerResponse updateTrainerProfile = trainerService.updateTrainerProfile(username, updateTrainerRequest);
         return new ResponseEntity<>(updateTrainerProfile, HttpStatus.OK);
+    }
+
+    @PatchMapping("/activateTrainer")
+    private ResponseEntity<SimpleResponse> activate(@RequestBody ActiveDeActiveRequest request){
+        trainerService.activateTrainer(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/deActivateTrainer")
+    private ResponseEntity<SimpleResponse> deActivate(@RequestBody ActiveDeActiveRequest request){
+        trainerService.deactivateTrainer(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

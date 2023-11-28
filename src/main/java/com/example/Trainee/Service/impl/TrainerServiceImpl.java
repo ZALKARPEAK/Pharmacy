@@ -1,6 +1,7 @@
 package com.example.Trainee.Service.impl;
 
 import com.example.Trainee.Dto.SimpleResponse;
+import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
 import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
@@ -21,11 +22,8 @@ import com.example.Trainee.entity.User;
 import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -148,19 +146,29 @@ public class TrainerServiceImpl implements TrainerService {
 
 
     @Override
-    public ResponseEntity<String> activateTrainer(Long id) {
-        return null;
+    public SimpleResponse activateTrainer(ActiveDeActiveRequest request) {
+        Trainer trainer = trainerDao.findTrainerByUser_Username(request.getUsername());
+
+        if (trainer != null && !trainer.getUser().isActive()) {
+            trainer.getUser().setActive(true);
+            return SimpleResponse.builder().massage("Activated").status(HttpStatus.OK).build();
+        }
+
+        return SimpleResponse.builder().massage("Trainer not found or already active").status(HttpStatus.NOT_FOUND).build();
     }
 
     @Override
-    public ResponseEntity<String> deactivateTrainer(Long id) {
-        return null;
+    public SimpleResponse deactivateTrainer(ActiveDeActiveRequest request) {
+        Trainer trainer = trainerDao.findTrainerByUser_Username(request.getUsername());
+
+        if (trainer != null && trainer.getUser().isActive()) {
+            trainer.getUser().setActive(false);
+            return SimpleResponse.builder().massage("Deactivated").status(HttpStatus.OK).build();
+        }
+
+        return SimpleResponse.builder().massage("Trainer not found or already inactive").status(HttpStatus.NOT_FOUND).build();
     }
 
-    @Override
-    public TrainerResponse updateTrainerTrainingList(String trainerUsername, List<Long> trainerIds) {
-        return null;
-    }
 
     @Override
     public TrainerResponse getTrainerTrainingList(String trainerUsername) {

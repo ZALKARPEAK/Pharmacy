@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import com.example.Trainee.entity.additional.Id;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -26,6 +27,17 @@ public class Trainer extends Id {
     @JsonIgnore
     private List<Trainee> trainee;
 
+    @Transient
+    private List<Training> trainings;
+
     public Trainer() {
+        this.trainings = new ArrayList<>();
     }
+
+    public void addTraining(Training training) {
+        this.trainings.add(training);
+        training.setTrainer(this);
+    }
+
+
 }

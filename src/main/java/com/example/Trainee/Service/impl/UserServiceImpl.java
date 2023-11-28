@@ -1,7 +1,5 @@
 package com.example.Trainee.Service.impl;
 
-
-import com.example.Trainee.Repo.UserRepo;
 import com.example.Trainee.Service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,8 +9,6 @@ import java.util.Random;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
-
-    private final UserRepo userRepo;
 
     public String generateUsername(String firstName, String lastName) {
         return firstName.substring(0, 1).toLowerCase() + lastName.toLowerCase();

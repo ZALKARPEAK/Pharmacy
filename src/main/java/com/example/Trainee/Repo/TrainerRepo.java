@@ -17,8 +17,4 @@ public interface TrainerRepo extends JpaRepository<Trainer, Long> {
     @Query("SELECT t FROM Trainer t JOIN t.user u WHERE u.username in :usernames")
     List<Trainer> findTraineeByUser_Username2(@Param("usernames") List<String> usernames);
 
-    @Query("SELECT t FROM Trainer t JOIN FETCH t.user u WHERE u.username = :username")
-    List<Trainer> findTrainersByUser_Username(@Param("username") String username);
-
-
 }

@@ -3,12 +3,15 @@ package com.example.Trainee.Api;
 import com.example.Trainee.Dto.SimpleResponse;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileRequest;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileResponse;
+import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
 import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainee.RegistrationTrainee.TraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeRequest;
 import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTraineeTrainerList.UpdateTraineeTrainerListRequest;
 import com.example.Trainee.Dto.TrainerInfo;
+import com.example.Trainee.Dto.Training.getTraineeTrainingsList.GetTraineeTrainingsListRequest;
+import com.example.Trainee.Dto.Training.getTraineeTrainingsList.TrainingResponse;
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Dto.UserCheckRequest;
@@ -72,5 +75,23 @@ public class TraineeApi {
     public ResponseEntity<TrainerResponse> updateTrainer(@RequestBody UpdateTraineeTrainerListRequest updateRequest) {
        TrainerResponse trainerResponse = traineeService.updateTraineeTrainerList(updateRequest);
         return new ResponseEntity<>(trainerResponse, HttpStatus.OK);
+    }
+
+    @GetMapping("/getTraineeTrainingsList")
+    private ResponseEntity<List<TrainingResponse>> getTraineeTrainingsList(@RequestBody GetTraineeTrainingsListRequest request){
+        List<TrainingResponse> trainingResponse = traineeService.getTraineeTrainingsList(request);
+        return new ResponseEntity<>(trainingResponse, HttpStatus.OK);
+    }
+
+    @PatchMapping("/activateTrainee")
+    private ResponseEntity<SimpleResponse> activate(@RequestBody ActiveDeActiveRequest request){
+        traineeService.activateTrainee(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/deActivateTrainee")
+    private ResponseEntity<SimpleResponse> deActivate(@RequestBody ActiveDeActiveRequest request){
+        traineeService.deactivateTrainee(request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

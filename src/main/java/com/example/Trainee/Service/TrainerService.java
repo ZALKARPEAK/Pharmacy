@@ -1,6 +1,7 @@
 package com.example.Trainee.Service;
 
 import com.example.Trainee.Dto.SimpleResponse;
+import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
 import com.example.Trainee.Dto.TrainerResponse;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
@@ -20,8 +21,7 @@ public interface TrainerService {
     GetTrainerProfileResponse SelectTrainerProfileByUsername(GetTrainerProfileRequest request);
     SimpleResponse changeTrainerPassword(UserChangePasswordRequest userChangePasswordRequest);
     UpdateTrainerResponse updateTrainerProfile(String username, UpdateTrainerRequest updateTrainerRequest);
-    ResponseEntity<String> activateTrainer(Long id);
-    ResponseEntity<String> deactivateTrainer(Long id);
-    TrainerResponse updateTrainerTrainingList(String trainerUsername, List<Long> trainerIds);
+    SimpleResponse activateTrainer(ActiveDeActiveRequest request);
+    SimpleResponse deactivateTrainer(ActiveDeActiveRequest request);
     TrainerResponse getTrainerTrainingList(String trainerUsername);
 }

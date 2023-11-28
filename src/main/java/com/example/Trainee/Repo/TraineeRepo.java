@@ -11,6 +11,4 @@ public interface TraineeRepo extends JpaRepository<Trainee, Long> {
     @Query("SELECT t FROM Trainee t JOIN t.user u WHERE u.username = :username")
     Trainee findTraineeByUser_Username(@Param("username") String username);
 
-    @Query("SELECT t FROM Trainer t WHERE t.user.username=:username")
-    Trainer findByTrainerName(@Param("username") String username);
 }
