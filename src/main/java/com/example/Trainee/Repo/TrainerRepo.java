@@ -4,10 +4,12 @@ import com.example.Trainee.entity.Trainer;
 import com.example.Trainee.entity.Training;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+@EnableJpaRepositories
 public interface TrainerRepo extends JpaRepository<Trainer, Long> {
     @Query("SELECT t FROM Trainer t JOIN FETCH t.user u WHERE u.username = :username")
     Trainer findTrainerByUser_Username(@Param("username") String username);
@@ -20,5 +22,4 @@ public interface TrainerRepo extends JpaRepository<Trainer, Long> {
 
     @Query("select t from Training t join t.trainer.user u where u.username in :usernames")
     List<Training> findByTraining_UserNameIn(@Param("usernames") List<String> usernames);
-
 }

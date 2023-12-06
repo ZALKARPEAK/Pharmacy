@@ -3,7 +3,6 @@ package com.example.Trainee.Dto.Trainee.RegistrationTrainee;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.util.Date;
 
 @Getter
@@ -14,5 +13,4 @@ public class TraineeRequest {
     private String last_Name;
     private Date date_of_birth;
     private String address;
-
 }

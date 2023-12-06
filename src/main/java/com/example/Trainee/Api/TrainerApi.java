@@ -1,6 +1,9 @@
 package com.example.Trainee.Api;
 
 import com.example.Trainee.Dto.SimpleResponse;
+import com.example.Trainee.Dto.UserChangePasswordRequest;
+import com.example.Trainee.Dto.UserCheckRequest;
+import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Dto.Trainee.IsActive.ActiveDeActiveRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRequest;
 import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileResponse;
@@ -8,14 +11,12 @@ import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerRequest;
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerResponse;
 import com.example.Trainee.Dto.Trainer.getTrainings.PeriodTrainingsList;
 import com.example.Trainee.Dto.Trainer.getTrainings.ResponseTrainers;
-import com.example.Trainee.Dto.UserChangePasswordRequest;
-import com.example.Trainee.Dto.UserCheckRequest;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
-import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Service.TrainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/Trainer")
 @RequiredArgsConstructor
+@PreAuthorize("hasAuthority('TRAINER')")
 public class TrainerApi {
 
     private final TrainerService trainerService;

@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 public class TrainerResponse {
     private List<TrainerInfo> trainersInfo;
 
-
     public TrainerResponse(String firstName, String lastName, String userName, Training_Types specialization) {
         this.trainersInfo = List.of(new TrainerInfo(firstName, lastName, userName, specialization));
     }

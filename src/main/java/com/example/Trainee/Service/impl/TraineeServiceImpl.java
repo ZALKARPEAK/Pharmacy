@@ -1,6 +1,5 @@
 package com.example.Trainee.Service.impl;
 
-
 import com.example.Trainee.Dto.*;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileRequest;
 import com.example.Trainee.Dto.Trainee.GetTraineeProfile.GetTraineeProfileResponse;
@@ -160,9 +159,12 @@ TraineeServiceImpl implements TraineeService {
 
         List<Trainer> assignedTrainers = trainee.getTrainer();
 
-        List<Trainer> notAssigned = trainers.stream().filter(trainer -> !assignedTrainers.contains(trainer)).toList();
+        List<Trainer> notAssigned = trainers.stream().filter(trainer ->
+                !assignedTrainers.contains(trainer)).toList();
 
-        return notAssigned.stream().map(trainer -> new TrainerInfo(trainer.getUser().getUsername(), trainer.getUser().getFirstName(), trainer.getUser().getLastName(), trainer.getTrainingTypes())).collect(Collectors.toList());
+        return notAssigned.stream().map(trainer -> new TrainerInfo(trainer.getUser().getUsername(),
+                trainer.getUser().getFirstName(), trainer.getUser().getLastName(),
+                trainer.getTrainingTypes())).collect(Collectors.toList());
     }
 
     @Override
@@ -173,13 +175,17 @@ TraineeServiceImpl implements TraineeService {
         List<Trainer> existingTrainers = trainee.getTrainer();
         List<Trainer> newTrainers = trainerRepo.findTraineeByUser_Username2(trainersUsername);
 
-        List<Trainer> trainersToAdd = newTrainers.stream().filter(trainer -> !existingTrainers.contains(trainer)).toList();
+        List<Trainer> trainersToAdd = newTrainers.stream().filter(trainer ->
+                !existingTrainers.contains(trainer)).toList();
 
         existingTrainers.addAll(trainersToAdd);
         trainee.setTrainer(existingTrainers);
         traineeRepo.save(trainee);
 
-        List<TrainerResponse> updateResponses = existingTrainers.stream().map(trainer -> new TrainerResponse(trainer.getUser().getFirstName(), trainer.getUser().getLastName(), trainer.getUser().getUsername(), trainer.getTrainingTypes())).collect(Collectors.toList());
+        List<TrainerResponse> updateResponses = existingTrainers.stream().map(trainer
+                -> new TrainerResponse(trainer.getUser().getFirstName(),
+                trainer.getUser().getLastName(), trainer.getUser().getUsername(),
+                trainer.getTrainingTypes())).collect(Collectors.toList());
 
         return new TrainerResponse(updateResponses);
     }
