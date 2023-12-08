@@ -10,6 +10,8 @@ import com.example.Trainee.Dto.Trainee.UpdateTrainee.UpdateTraineeResponse;
 import com.example.Trainee.Dto.Trainee.UpdateTraineeTrainerList.UpdateTraineeTrainerListRequest;
 import com.example.Trainee.Dto.Training.getTraineeTrainingsList.GetTraineeTrainingsListRequest;
 import com.example.Trainee.Dto.Training.getTraineeTrainingsList.TrainingResponse;
+import com.example.Trainee.Exception.NotFoundException;
+import com.example.Trainee.Pagination.TraineePaginationResponse;
 import com.example.Trainee.Repo.TraineeRepo;
 import com.example.Trainee.Repo.TrainerRepo;
 import com.example.Trainee.Repo.UserRepo;
@@ -22,6 +24,9 @@ import com.example.Trainee.entity.User;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,14 +39,26 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class
-
-TraineeServiceImpl implements TraineeService {
+public class TraineeServiceImpl implements TraineeService {
 
     private final TraineeRepo traineeRepo;
     private final TrainerRepo trainerRepo;
     private final UserService userService;
     private final UserRepo userRepo;
+
+    @Override
+    public TraineePaginationResponse getAllTrainee(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<GetTraineeProfileResponse> getTraineeProfileResponses = traineeRepo.getAllTrainee(pageable);
+
+
+        return TraineePaginationResponse.builder()
+                .trainees(getTraineeProfileResponses.getContent())
+                .page(getTraineeProfileResponses.getNumber() + 1)
+                .size((int) getTraineeProfileResponses.getTotalElements())
+                .build();
+    }
 
     @Override
     public UserCreateResponse createTraineeProfile(TraineeRequest traineeRequest) {
@@ -114,7 +131,7 @@ TraineeServiceImpl implements TraineeService {
         Trainee trainee = traineeRepo.findTraineeByUser_Username(username);
 
         if (trainee == null) {
-            return null;
+            throw new NotFoundException("Trainee not found");
         }
 
         User user = trainee.getUser();
@@ -192,8 +209,6 @@ TraineeServiceImpl implements TraineeService {
 
     @Override
     public List<TrainingResponse> getTraineeTrainingsList(GetTraineeTrainingsListRequest request) {
-            Trainer trainer = trainerRepo.findTrainerByUser_Username(request.getUsername());
-
             List<String> trainings1 = Collections.singletonList(request.getUsername());
             List<Training> trainings = trainerRepo.findByTraining_UserNameIn(trainings1);
 
@@ -231,8 +246,6 @@ TraineeServiceImpl implements TraineeService {
             trainee.getUser().setActive(false);
             return SimpleResponse.builder().massage("Active").status(HttpStatus.OK).build();
         }
-
-
         return null;
     }
 }

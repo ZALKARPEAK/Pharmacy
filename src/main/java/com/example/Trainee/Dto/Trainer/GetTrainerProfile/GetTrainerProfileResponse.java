@@ -30,4 +30,11 @@ public class GetTrainerProfileResponse {
                 }
         ).collect(Collectors.toList());
     }
+
+    public GetTrainerProfileResponse(String firstName, String lastName, Training_Types trainingTypes, boolean isActive) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.trainingTypes = trainingTypes;
+        this.isActive = isActive;
+    }
 }

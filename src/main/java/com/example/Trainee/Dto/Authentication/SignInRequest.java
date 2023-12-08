@@ -1,17 +1,20 @@
 package com.example.Trainee.Dto.Authentication;
 
+import com.example.Trainee.validator.Password;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
 @AllArgsConstructor
 public class SignInRequest {
-    @NotEmpty(message = "fill in the field")
+    @NotNull(message = "fill in the field")
+    @Email
     private String email;
-    @NotEmpty(message = "fill in the field")
+    @NotNull(message = "fill in the field")
+    @Password(message = "Not null")
     private String password;
 }

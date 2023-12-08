@@ -2,6 +2,7 @@ package com.example.Trainee.Dto.Trainee.GetTraineeProfile;
 
 import com.example.Trainee.Dto.TrainerInfo;
 import com.example.Trainee.entity.Trainer;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class GetTraineeProfileResponse {
     private String firstName;
     private String lastName;
@@ -32,5 +34,13 @@ public class GetTraineeProfileResponse {
                     return trainerResponse;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public GetTraineeProfileResponse(String firstName, String lastName, Date dateOfBirth, String address, boolean isActive) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = dateOfBirth;
+        this.address = address;
+        this.isActive = isActive;
     }
 }

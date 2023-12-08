@@ -1,5 +1,4 @@
 package com.example.Trainee.Config;
-import com.example.Trainee.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,20 +24,22 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    SecurityFilterChain SecurityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(corsFilter(), CorsFilter.class)  // Добавьте фильтр CORS перед другими фильтрами
                 .authorizeHttpRequests((authorizeHttpRequests) ->
                         authorizeHttpRequests
                                 .requestMatchers(
-                                        "/api/auth/**").
-                                permitAll()
+                                        "/",
+                                        "/api/auth/**",
+                                        "/swagger-ui/**",
+                                        "v3/api-docs/**",
+                                        "/api/admin/**")
+                                .permitAll()
                                 .anyRequest()
-                                .authenticated()).authenticationProvider(authenticationProvider).addFilterBefore(
-                                        jwtFilter, UsernamePasswordAuthenticationFilter.class
-                )
+                                .authenticated())
                 .sessionManagement((sessionManagement) ->
-                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+                        sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider).addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

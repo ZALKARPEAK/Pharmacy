@@ -12,10 +12,12 @@ import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRespon
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerRequest;
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerResponse;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
+import com.example.Trainee.Pagination.TrainerPaginationResponse;
 
 import java.util.List;
 
 public interface TrainerService {
+    TrainerPaginationResponse getAllTrainee(int page, int size);
     UserCreateResponse createTrainerProfile(TrainerRequest trainerRequest);
     SimpleResponse checkCredentialsTrainer(UserCheckRequest userCheckRequest);
     GetTrainerProfileResponse SelectTrainerProfileByUsername(GetTrainerProfileRequest request);

@@ -16,10 +16,14 @@ import com.example.Trainee.Dto.Training.getTraineeTrainingsList.TrainingResponse
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Dto.UserCheckRequest;
+import com.example.Trainee.Pagination.TraineePaginationResponse;
 
 import java.util.List;
 
 public interface TraineeService {
+
+    TraineePaginationResponse getAllTrainee(int page, int size);
+
     UserCreateResponse createTraineeProfile(TraineeRequest TraineeRequest);
 
     SimpleResponse checkCredentialsTrainee(UserCheckRequest userCheckRequest);

@@ -10,6 +10,7 @@ import com.example.Trainee.entity.Trainee;
 import com.example.Trainee.entity.Trainer;
 import com.example.Trainee.entity.Training;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,8 +36,9 @@ public class TrainingServiceImpl implements TrainingService {
 
 
         trainingRepo.save(training);
+        SimpleResponse simpleResponse =  SimpleResponse.builder().massage("created").build();
 
-        return null;
+        return new ResponseEntity<>(simpleResponse, HttpStatus.CREATED);
     }
 
 }

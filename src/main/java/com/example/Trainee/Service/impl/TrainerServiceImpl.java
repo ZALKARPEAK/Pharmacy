@@ -12,6 +12,8 @@ import com.example.Trainee.Dto.Trainer.GetTrainerProfile.GetTrainerProfileRespon
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerRequest;
 import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerResponse;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
+import com.example.Trainee.Exception.NotFoundException;
+import com.example.Trainee.Pagination.TrainerPaginationResponse;
 import com.example.Trainee.Repo.TraineeRepo;
 import com.example.Trainee.Repo.TrainerRepo;
 import com.example.Trainee.Repo.UserRepo;
@@ -21,6 +23,9 @@ import com.example.Trainee.Service.UserService;
 import com.example.Trainee.entity.*;
 import jakarta.persistence.NoResultException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,6 +43,19 @@ public class TrainerServiceImpl implements TrainerService {
     private final UserService userService;
     private final UserRepo userRepo;
     private final TraineeRepo traineeRepo;
+
+    @Override
+    public TrainerPaginationResponse getAllTrainee(int page, int size) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<GetTrainerProfileResponse> getTrainerProfileResponsePage = trainerDao.getAllTrainer(pageable);
+
+        return TrainerPaginationResponse.builder()
+                .trainees(getTrainerProfileResponsePage.getContent())
+                .page(getTrainerProfileResponsePage.getNumber() + 1)
+                .size((int) getTrainerProfileResponsePage.getTotalElements())
+                .build();
+    }
 
     @Override
     public UserCreateResponse createTrainerProfile(TrainerRequest trainerRequest) {
@@ -94,7 +112,7 @@ public class TrainerServiceImpl implements TrainerService {
         Trainer trainer = trainerDao.findTrainerByUser_Username(request.getUsername());
 
         if(trainer == null){
-            return null;
+            throw new NotFoundException("Trainer not found");
         }
 
         GetTrainerProfileResponse response = new GetTrainerProfileResponse();
@@ -129,7 +147,7 @@ public class TrainerServiceImpl implements TrainerService {
         Trainer trainer = trainerDao.findTrainerByUser_Username(username);
 
         if(trainer == null){
-            return null;
+            throw new NotFoundException("Trainer not found");
         }
 
         User user = trainer.getUser();

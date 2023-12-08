@@ -15,6 +15,7 @@ import com.example.Trainee.Dto.Training.getTraineeTrainingsList.TrainingResponse
 import com.example.Trainee.Dto.UserChangePasswordRequest;
 import com.example.Trainee.Dto.UserCreateResponse;
 import com.example.Trainee.Dto.UserCheckRequest;
+import com.example.Trainee.Pagination.TraineePaginationResponse;
 import com.example.Trainee.Service.TraineeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,11 @@ import java.util.List;
 public class TraineeApi {
 
     private final TraineeService traineeService;
+
+    @GetMapping
+    public TraineePaginationResponse getAllCustomers(@RequestParam int page, @RequestParam int size){
+        return traineeService.getAllTrainee(page,size);
+    }
 
     @PostMapping("/create-profile")
     public ResponseEntity<UserCreateResponse> createTraineeProfile(@RequestBody TraineeRequest traineeRequest) {

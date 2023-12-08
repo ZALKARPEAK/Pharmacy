@@ -4,12 +4,13 @@ import com.example.Trainee.Config.JwtService;
 import com.example.Trainee.Dto.Authentication.AuthenticationResponse;
 import com.example.Trainee.Dto.Authentication.SignInRequest;
 import com.example.Trainee.Dto.Authentication.SignUpRequest;
+import com.example.Trainee.Exception.AlreadyExistsException;
+import com.example.Trainee.Exception.BadCredentialsException;
 import com.example.Trainee.Repo.UserRepo;
 import com.example.Trainee.Service.AuthenticationService;
 import com.example.Trainee.entity.User;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +28,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public AuthenticationResponse signUp(SignUpRequest request) {
         if(userRepo.existsByEmail(request.getEmail())){
-            throw new RuntimeException(String.format("User with email: %s already exists",request.getEmail()));
+            throw new AlreadyExistsException(String.format("User with email: %s already exists", request.getEmail()));
         }
 
         User user = new User();

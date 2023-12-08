@@ -12,6 +12,8 @@ import com.example.Trainee.Dto.Trainer.UpdateTrainer.UpdateTrainerResponse;
 import com.example.Trainee.Dto.Trainer.getTrainings.PeriodTrainingsList;
 import com.example.Trainee.Dto.Trainer.getTrainings.ResponseTrainers;
 import com.example.Trainee.Dto.Trainer.RegistrationTrainer.TrainerRequest;
+import com.example.Trainee.Pagination.TraineePaginationResponse;
+import com.example.Trainee.Pagination.TrainerPaginationResponse;
 import com.example.Trainee.Service.TrainerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,11 @@ import java.util.List;
 public class TrainerApi {
 
     private final TrainerService trainerService;
+
+    @GetMapping
+    public TrainerPaginationResponse getAllCustomers(@RequestParam int page, @RequestParam int size){
+        return trainerService.getAllTrainee(page,size);
+    }
 
     @PostMapping("/create-profile")
     public ResponseEntity<UserCreateResponse> createTrainerProfile(@RequestBody TrainerRequest trainerRequest) {
